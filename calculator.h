@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QLabel>
+#include <QGridLayout>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Calculator; }
@@ -16,15 +17,28 @@ class Calculator : public QMainWindow
 public:
     Calculator(QWidget *parent = nullptr);
     ~Calculator();
-    QPushButton* createButton (const QString& str);
+    QPushButton* createButton (const QString& str, const char *member);
     void calculate ();
 
 public slots:
-    void ButtonClicked ();
+    void DigitClicked ();
+
+    void pointClicked();
+    void clear();
+
+    void devideOperatorClicked();
+    void multiplyOperatorClicked();
+    void percentOperatorClicked();
+    void minusOperatorClicked();
+    void plusOperatorClicked();
+    void equalClicked();
+
+    void openBracketClicked();
+    void closeBracketClicked();
 
 private:
     Ui::Calculator *ui;
-    QLabel *displaystr;
+    QLabel *display;
 
      enum { NumDigitButtons = 10 };
      QPushButton *digitButtons[NumDigitButtons];
@@ -33,11 +47,11 @@ private:
      QPushButton *clearButton;
 
      QPushButton *divideButton;
+     QPushButton *multiplyButton;
+     QPushButton *percentButton;
      QPushButton *minusButton;
      QPushButton *plusButton;
-     QPushButton *multiplyButton;
      QPushButton *equalButton;
-     QPushButton *percentButton;
 
      QPushButton *openBracketButton;
      QPushButton *closeBracketButton;
