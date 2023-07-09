@@ -5,6 +5,10 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QGridLayout>
+#include <QFont>
+#include <QtGui/QPalette>
+#include <QtGui/QBrush>
+#include <QtGui/QColor>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Calculator; }
@@ -19,22 +23,6 @@ public:
     ~Calculator();
     QPushButton* createButton (const QString& str, const char *member);
     void calculate ();
-
-public slots:
-    void DigitClicked ();
-
-    void pointClicked();
-    void clear();
-
-    void devideOperatorClicked();
-    void multiplyOperatorClicked();
-    void percentOperatorClicked();
-    void minusOperatorClicked();
-    void plusOperatorClicked();
-    void equalClicked();
-
-    void openBracketClicked();
-    void closeBracketClicked();
 
 private:
     Ui::Calculator *ui;
@@ -56,7 +44,26 @@ private:
      QPushButton *openBracketButton;
      QPushButton *closeBracketButton;
 
+     void setupPalette();
+     void setupDisplay();
+     void setupButtons();
+     QGridLayout* setupLayout();
+
 private slots:
-    void digit_numbers();
+     void DigitClicked ();
+
+     void pointClicked();
+     void clear();
+
+     void devideOperatorClicked();
+     void multiplyOperatorClicked();
+     void percentOperatorClicked();
+     void minusOperatorClicked();
+     void plusOperatorClicked();
+     void equalClicked();
+
+     void openBracketClicked();
+     void closeBracketClicked();
+
 };
 #endif // CALCULATOR_H
