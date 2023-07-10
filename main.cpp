@@ -1,6 +1,8 @@
 #include "calculator.h"
 
 #include <QApplication>
+#include <QStyleFactory>
+
 
 int main(int argc, char *argv[])
 {

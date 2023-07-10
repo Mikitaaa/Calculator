@@ -21,12 +21,16 @@ class Calculator : public QMainWindow
 public:
     Calculator(QWidget *parent = nullptr);
     ~Calculator();
-    QPushButton* createButton (const QString& str, const char *member);
     void calculate ();
 
 private:
     Ui::Calculator *ui;
     QLabel *display;
+
+     QPushButton* createButton (const QString& str, const QString &color, const char *member);
+     const QString digitColor = "background-color: rgb(100, 100, 102);";
+     const QString operatorColor = "background-color: rgb(215, 51, 154);";
+     const QString serviceColor = "background-color: rgb(70, 70, 71);";
 
      enum { NumDigitButtons = 10 };
      QPushButton *digitButtons[NumDigitButtons];
@@ -36,7 +40,6 @@ private:
 
      QPushButton *divideButton;
      QPushButton *multiplyButton;
-     QPushButton *percentButton;
      QPushButton *minusButton;
      QPushButton *plusButton;
      QPushButton *equalButton;
@@ -57,7 +60,6 @@ private slots:
 
      void devideOperatorClicked();
      void multiplyOperatorClicked();
-     void percentOperatorClicked();
      void minusOperatorClicked();
      void plusOperatorClicked();
      void equalClicked();

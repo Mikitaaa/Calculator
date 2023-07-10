@@ -22,26 +22,28 @@ Calculator::~Calculator()
     delete ui;
 }
 
-QPushButton* Calculator::createButton (const QString& str, const char *member) {
+QPushButton* Calculator::createButton (const QString& str, const QString &color, const char *member) {
  QPushButton* tempDigitButton = new QPushButton(str);
  tempDigitButton->setMinimumSize(60, 50);
- QFont font("Helvetica [Cronyx]", 20);
+ QFont font("Helvetica [Cronyx]", 23);
  tempDigitButton->setFont(font);
- tempDigitButton->setStyleSheet("QPushButton {"
-                                "background-color: rgb(95, 94, 99);"
-                                "border: 0px solid rgb(43, 41, 48);"
-                                "padding: 10px;"
-                                "}"
-                                "QPushButton:pressed {"
-                                "background-color: rgb(161, 160, 161);"
-                                "}");
+ QString styleSheet = QString("QPushButton {"
+                              "%1"
+                              "border: 0px solid rgb(43, 41, 48);"
+                              "padding: 10px;"
+                              "text-align: bottom;"
+                              "}"
+                              "QPushButton:pressed {"
+                              "background-color: rgb(161, 160, 161);"
+                              "}").arg(color);
+ tempDigitButton->setStyleSheet(styleSheet);
  connect(tempDigitButton, SIGNAL(clicked()), this, member);
  return tempDigitButton;
 }
 
-void Calculator::DigitClicked()
-{
-
+void Calculator::DigitClicked() {
+    //QString str = ((QPushButton*)sender())->text();
+    //display->setText(str);
 }
 
 void Calculator::pointClicked()
@@ -60,11 +62,6 @@ void Calculator::devideOperatorClicked()
 }
 
 void Calculator::multiplyOperatorClicked()
-{
-
-}
-
-void Calculator::percentOperatorClicked()
 {
 
 }
@@ -110,18 +107,17 @@ void Calculator::setupDisplay() {
 
 void Calculator::setupButtons() {
     for (int i = 0; i < NumDigitButtons; ++i) {
-      digitButtons[i] = createButton(QString::number(i), SLOT(DigitClicked()));
+      digitButtons[i] = createButton(QString::number(i), digitColor, SLOT(DigitClicked()));
      }
-    pointButton = createButton(tr("."), SLOT(pointClicked()));
-    clearButton = createButton(tr("AC"), SLOT(clear()));
-    divideButton = createButton(tr("÷"), SLOT(devideOperatorClicked()));
-    multiplyButton = createButton(tr("*"), SLOT(multiplyOperatorClicked()));
-    minusButton = createButton(tr("-"), SLOT(minusOperatorClicked()));
-    plusButton = createButton(tr("+"), SLOT(plusOperatorClicked()));
-    percentButton = createButton(tr("%"), SLOT(percentOperatorClicked()));
-    equalButton = createButton(tr("="), SLOT(equalClicked()));
-    openBracketButton = createButton(tr("("), SLOT(openBracketClicked()));
-    closeBracketButton = createButton(tr(")"), SLOT(closeBracketClicked()));
+    pointButton = createButton(tr("."), digitColor, SLOT(pointClicked()));
+    clearButton = createButton(tr("AC"), serviceColor, SLOT(clear()));
+    divideButton = createButton(tr("÷"), operatorColor, SLOT(devideOperatorClicked()));
+    multiplyButton = createButton(tr("×"), operatorColor, SLOT(multiplyOperatorClicked()));
+    minusButton = createButton(tr("−"), operatorColor, SLOT(minusOperatorClicked()));
+    plusButton = createButton(tr("+"), operatorColor, SLOT(plusOperatorClicked()));
+    equalButton = createButton(tr("="), operatorColor, SLOT(equalClicked()));
+    openBracketButton = createButton(tr("("), serviceColor, SLOT(openBracketClicked()));
+    closeBracketButton = createButton(tr(")"), serviceColor, SLOT(closeBracketClicked()));
 }
 
 QGridLayout* Calculator::setupLayout()
@@ -140,16 +136,15 @@ QGridLayout* Calculator::setupLayout()
       tempLayout->addWidget(digitButtons[i], row, column);
      }
 
-    tempLayout->addWidget(digitButtons[0], 5, 1);
-    tempLayout->addWidget(pointButton, 5, 2);
-    tempLayout->addWidget(divideButton, 2, 4);
-    tempLayout->addWidget(multiplyButton, 3, 4);
-    tempLayout->addWidget(minusButton, 4, 4);
-    tempLayout->addWidget(plusButton, 5, 4);
-    tempLayout->addWidget(percentButton, 1, 2);
-    tempLayout->addWidget(equalButton, 5, 3);
-    tempLayout->addWidget(openBracketButton, 1, 3);
-    tempLayout->addWidget(closeBracketButton, 1, 4);
+    tempLayout->addWidget(digitButtons[0], 5, 1, 1, 2);
+    tempLayout->addWidget(pointButton, 5, 3);
+    tempLayout->addWidget(divideButton, 1, 4);
+    tempLayout->addWidget(multiplyButton, 2, 4);
+    tempLayout->addWidget(minusButton, 3, 4);
+    tempLayout->addWidget(plusButton, 4, 4);
+    tempLayout->addWidget(equalButton, 5, 4);
+    tempLayout->addWidget(openBracketButton, 1, 2);
+    tempLayout->addWidget(closeBracketButton, 1, 3);
 
     return tempLayout;
 }
