@@ -10,6 +10,8 @@ Calculator::Calculator(QWidget *parent)
 
     setupButtons();
 
+    formula = "(-2+3)*-4";
+
     QGridLayout *Layout = setupLayout();
 
     QWidget* centralWidget = new QWidget;
@@ -76,8 +78,14 @@ void Calculator::plusOperatorClicked()
 
 }
 
-void Calculator::equalClicked()
-{
+void Calculator::equalClicked(){
+    calculate();
+    display->setText(result);
+
+    numbers.clear();
+    operators.clear();
+
+    formula = result;
 
 }
 
@@ -147,4 +155,98 @@ QGridLayout* Calculator::setupLayout()
     tempLayout->addWidget(closeBracketButton, 1, 3);
 
     return tempLayout;
+}
+
+bool Calculator::checkParentheses() {
+int openCount = 0;
+int closeCount = 0;
+for (QChar c : formula) {
+    if (c == '(') {
+        openCount++;
+    } else if (c == ')') {
+        closeCount++;
+    }
+}
+
+return openCount == closeCount;
+}
+
+bool Calculator::isOperation(QChar c) {return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';}
+
+int Calculator::setPriority(char op) {
+    if (op < 0) return 3;
+    else {
+       if (op == '+' || op == '-') return 1;
+       else if (op == '*' || op == '/') return 2;
+       else if (op == '^') return 4;
+       else return -1;
+    }
+}
+
+void Calculator::action(char op) {
+    if (op < 0) {
+        double negativeNum = numbers.pop();
+        if (-op == '-') {numbers.push(-negativeNum);}
+     } else {
+        double right = numbers.pop();
+        double left = numbers.pop();
+        switch (op) {
+        case '+': numbers.push(left + right); break;
+        case '-': numbers.push(left - right); break;
+        case '*': numbers.push(left * right); break;
+        case '/': numbers.push(left / right); break;
+        case '^': numbers.push(std::pow(left, right)); break;
+        }
+    }
+}
+
+void Calculator::calculate() {
+    if (!checkParentheses()){
+        qDebug() << "Проверьте количество скобок!";
+    return ;
+}
+
+    bool unary = true;
+    numbers.clear();
+    operators.clear();
+
+for (int i = 0; i < formula.size(); i++) {
+    QChar currentChar = formula[i];
+
+    if (currentChar == '(') {
+        operators.push('(');
+        unary = true;
+    } else if (currentChar == ')') {
+        while (operators.top() != '(') {
+            action(operators.pop());
+        }
+        operators.pop();
+        unary = false;
+    } else if (isOperation(currentChar)) {
+        char operation = currentChar.toLatin1();
+
+        if (unary) operation = -operation;
+
+        while (!operators.empty() && setPriority(operators.top()) >= setPriority(operation)) {
+            action(operators.pop());
+        }
+        operators.push(operation);
+        unary = true;
+    } else if (currentChar.isDigit() || currentChar == '.') {
+        QString number;
+        while (i < formula.size() && (formula[i].isDigit() || formula[i] == '.')) {
+            number += formula[i];
+            i++;
+        }
+        i--;
+        numbers.push(number.toDouble());
+        unary = false;
+    }
+}
+
+while (!operators.empty()) {
+    action(operators.pop());
+}
+
+result = QString::number(numbers.pop());
 }

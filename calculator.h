@@ -4,8 +4,11 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QLabel>
+#include <QStack>
+#include <QString>
 #include <QGridLayout>
 #include <QFont>
+#include <QDebug>
 #include <QtGui/QPalette>
 #include <QtGui/QBrush>
 #include <QtGui/QColor>
@@ -23,9 +26,18 @@ public:
     ~Calculator();
     void calculate ();
 
+    bool checkParentheses();
+    bool isOperation(QChar c);
+    int setPriority(char op);
+    void action(char op);
+    QString formula;
+
 private:
     Ui::Calculator *ui;
     QLabel *display;
+    QStack<double> numbers;
+    QStack<char> operators;
+    QString result;
 
      QPushButton* createButton (const QString& str, const QString &color, const char *member);
      const QString digitColor = "background-color: rgb(100, 100, 102);";
