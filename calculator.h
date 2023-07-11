@@ -48,11 +48,13 @@ private:
 
      QPushButton *pointButton;
      QPushButton *clearButton;
+     QPushButton *backspaseButton;
 
      QPushButton *divideButton;
      QPushButton *multiplyButton;
      QPushButton *minusButton;
      QPushButton *plusButton;
+     QPushButton *powerButton;
      QPushButton *equalButton;
 
      QPushButton *openBracketButton;
@@ -68,6 +70,7 @@ private slots:
 
      void DigitOrOperatorClicked();
      void clear();
+     void backspaseClicked();
 
      void equalClicked();
 };

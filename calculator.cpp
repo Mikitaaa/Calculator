@@ -62,6 +62,11 @@ void Calculator::clear() {
 
 }
 
+void Calculator::backspaseClicked() {
+    formula.chop(1);
+    display->setText(formula);
+}
+
 void Calculator::equalClicked(){
 
     QString result = calculate();
@@ -98,6 +103,8 @@ void Calculator::setupButtons() {
     clearButton = createButton(tr("AC"), serviceColor, SLOT(clear()));
 
     pointButton = createButton(tr("."), digitColor, SLOT(DigitOrOperatorClicked()));
+    backspaseButton = createButton(tr("⌫"), serviceColor, SLOT(backspaseClicked()));
+    powerButton = createButton(tr("^"), operatorColor, SLOT(DigitOrOperatorClicked()));
     divideButton = createButton(tr("÷"), operatorColor, SLOT(DigitOrOperatorClicked()));
     multiplyButton = createButton(tr("×"), operatorColor, SLOT(DigitOrOperatorClicked()));
     minusButton = createButton(tr("-"), operatorColor, SLOT(DigitOrOperatorClicked()));
@@ -114,7 +121,7 @@ QGridLayout* Calculator::setupLayout()
     tempLayout->setSpacing(1);
 
     tempLayout->addWidget(display, 0, 0, 1, 6);
-    tempLayout->addWidget(clearButton, 1, 1, 1, 1);
+    tempLayout->addWidget(clearButton, 1, 1, 1, 2);
 
     for (int i = 1; i < NumDigitButtons; ++i) {
       int row = ((9 - i) / 3) + 2;
@@ -123,14 +130,16 @@ QGridLayout* Calculator::setupLayout()
      }
 
     tempLayout->addWidget(digitButtons[0], 5, 1, 1, 2);
+    tempLayout->addWidget(backspaseButton, 1, 5);
     tempLayout->addWidget(pointButton, 5, 3);
-    tempLayout->addWidget(divideButton, 1, 4);
-    tempLayout->addWidget(multiplyButton, 2, 4);
+    tempLayout->addWidget(multiplyButton, 4, 5);
+    tempLayout->addWidget(plusButton, 3, 5);
+    tempLayout->addWidget(powerButton, 2, 4, 1, 2);
     tempLayout->addWidget(minusButton, 3, 4);
-    tempLayout->addWidget(plusButton, 4, 4);
-    tempLayout->addWidget(equalButton, 5, 4);
-    tempLayout->addWidget(openBracketButton, 1, 2);
-    tempLayout->addWidget(closeBracketButton, 1, 3);
+    tempLayout->addWidget(divideButton, 4, 4);
+    tempLayout->addWidget(equalButton, 5, 4, 1, 2);
+    tempLayout->addWidget(openBracketButton, 1, 3);
+    tempLayout->addWidget(closeBracketButton, 1, 4);
 
     return tempLayout;
 }
