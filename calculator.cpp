@@ -1,4 +1,5 @@
 #include "calculator.h"
+#include "display.h"
 #include "./ui_calculator.h"
 #include <QDialog>
 
@@ -49,6 +50,7 @@ void Calculator::DigitOrOperatorClicked() {
     if(str == "÷") formula += "/";
     else if (str == "×") formula += "*";
     else formula += str;
+
     display->setText(formula);
 }
 
@@ -87,9 +89,8 @@ void Calculator::setupPalette() {
 }
 
 void Calculator::setupDisplay() {
-    display = new QLabel("0");
-    display->setMinimumSize (150, 55);
-    display->setAlignment(Qt::AlignRight | Qt::AlignBottom);
+    display = new Display(this);
+    display->setMaximumSize (311, 60);
     QFont font("Helvetica [Cronyx]", 44, QFont::Cursive);
     display->setFont(font);
 }
@@ -198,7 +199,7 @@ void Calculator::action(char op) {
 QString Calculator::calculate() {
     if (!checkParentheses()){
         errorMessage("Несовпадение скобок!");
-      return "0";
+      return "";
      }
 
     bool unary = true;

@@ -16,6 +16,8 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
+        display.h
+        display.cpp
         calculator.cpp
         calculator.h
         calculator.ui

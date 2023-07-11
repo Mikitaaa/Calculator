@@ -1,8 +1,11 @@
 #ifndef CALCULATOR_H
 #define CALCULATOR_H
 
+#include "display.h"
+
 #include <QMainWindow>
 #include <QPushButton>
+#include <QTextEdit>
 #include <QLabel>
 #include <QStack>
 #include <QString>
@@ -34,7 +37,7 @@ public:
 
 private:
     Ui::Calculator *ui;
-    QLabel *display;
+    Display *display;
     QStack<double> numbers;
     QStack<char> operators;
 
