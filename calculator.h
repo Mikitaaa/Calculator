@@ -24,7 +24,7 @@ class Calculator : public QMainWindow
 public:
     Calculator(QWidget *parent = nullptr);
     ~Calculator();
-    void calculate ();
+    QString calculate ();
 
     bool checkParentheses();
     bool isOperation(QChar c);
@@ -37,7 +37,6 @@ private:
     QLabel *display;
     QStack<double> numbers;
     QStack<char> operators;
-    QString result;
 
      QPushButton* createButton (const QString& str, const QString &color, const char *member);
      const QString digitColor = "background-color: rgb(100, 100, 102);";
@@ -63,21 +62,13 @@ private:
      void setupDisplay();
      void setupButtons();
      QGridLayout* setupLayout();
+     void errorMessage(const QString& message);
 
 private slots:
-     void DigitClicked ();
 
-     void pointClicked();
+     void DigitOrOperatorClicked();
      void clear();
 
-     void devideOperatorClicked();
-     void multiplyOperatorClicked();
-     void minusOperatorClicked();
-     void plusOperatorClicked();
      void equalClicked();
-
-     void openBracketClicked();
-     void closeBracketClicked();
-
 };
 #endif // CALCULATOR_H

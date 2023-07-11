@@ -1,5 +1,6 @@
 #include "calculator.h"
 #include "./ui_calculator.h"
+#include <QDialog>
 
 Calculator::Calculator(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::Calculator) {
@@ -10,7 +11,7 @@ Calculator::Calculator(QWidget *parent)
 
     setupButtons();
 
-    formula = "(-2+3)*-4";
+    formula = "";
 
     QGridLayout *Layout = setupLayout();
 
@@ -43,60 +44,35 @@ QPushButton* Calculator::createButton (const QString& str, const QString &color,
  return tempDigitButton;
 }
 
-void Calculator::DigitClicked() {
-    //QString str = ((QPushButton*)sender())->text();
-    //display->setText(str);
+void Calculator::DigitOrOperatorClicked() {
+    QString str = ((QPushButton*)sender())->text();
+    if(str == "÷") formula += "/";
+    else if (str == "×") formula += "*";
+    else formula += str;
+    display->setText(formula);
 }
 
-void Calculator::pointClicked()
-{
-
-}
-
-void Calculator::clear()
-{
-
-}
-
-void Calculator::devideOperatorClicked()
-{
-
-}
-
-void Calculator::multiplyOperatorClicked()
-{
-
-}
-
-void Calculator::minusOperatorClicked()
-{
-
-}
-
-void Calculator::plusOperatorClicked()
-{
-
-}
-
-void Calculator::equalClicked(){
-    calculate();
-    display->setText(result);
+void Calculator::clear() {
+    display->setText("0");
 
     numbers.clear();
     operators.clear();
 
-    formula = result;
+    formula = "";
 
 }
 
-void Calculator::openBracketClicked()
-{
+void Calculator::equalClicked(){
 
-}
-void Calculator::closeBracketClicked()
-{
+    QString result = calculate();
+    display->setText(result);
 
+    numbers.clear();
+    operators.clear();
+    if(result == "nan" || result == "0")formula = "";
+   else formula = result;
 }
+
 
 void Calculator::setupPalette() {
     QPalette palette;
@@ -115,17 +91,19 @@ void Calculator::setupDisplay() {
 
 void Calculator::setupButtons() {
     for (int i = 0; i < NumDigitButtons; ++i) {
-      digitButtons[i] = createButton(QString::number(i), digitColor, SLOT(DigitClicked()));
+      digitButtons[i] = createButton(QString::number(i), digitColor, SLOT(DigitOrOperatorClicked()));
      }
-    pointButton = createButton(tr("."), digitColor, SLOT(pointClicked()));
-    clearButton = createButton(tr("AC"), serviceColor, SLOT(clear()));
-    divideButton = createButton(tr("÷"), operatorColor, SLOT(devideOperatorClicked()));
-    multiplyButton = createButton(tr("×"), operatorColor, SLOT(multiplyOperatorClicked()));
-    minusButton = createButton(tr("−"), operatorColor, SLOT(minusOperatorClicked()));
-    plusButton = createButton(tr("+"), operatorColor, SLOT(plusOperatorClicked()));
+
     equalButton = createButton(tr("="), operatorColor, SLOT(equalClicked()));
-    openBracketButton = createButton(tr("("), serviceColor, SLOT(openBracketClicked()));
-    closeBracketButton = createButton(tr(")"), serviceColor, SLOT(closeBracketClicked()));
+    clearButton = createButton(tr("AC"), serviceColor, SLOT(clear()));
+
+    pointButton = createButton(tr("."), digitColor, SLOT(DigitOrOperatorClicked()));
+    divideButton = createButton(tr("÷"), operatorColor, SLOT(DigitOrOperatorClicked()));
+    multiplyButton = createButton(tr("×"), operatorColor, SLOT(DigitOrOperatorClicked()));
+    minusButton = createButton(tr("-"), operatorColor, SLOT(DigitOrOperatorClicked()));
+    plusButton = createButton(tr("+"), operatorColor, SLOT(DigitOrOperatorClicked()));
+    openBracketButton = createButton(tr("("), serviceColor, SLOT(DigitOrOperatorClicked()));
+    closeBracketButton = createButton(tr(")"), serviceColor, SLOT(DigitOrOperatorClicked()));
 }
 
 QGridLayout* Calculator::setupLayout()
@@ -184,27 +162,35 @@ int Calculator::setPriority(char op) {
 }
 
 void Calculator::action(char op) {
-    if (op < 0) {
-        double negativeNum = numbers.pop();
-        if (-op == '-') {numbers.push(-negativeNum);}
-     } else {
+    if (numbers.size() == 0) { return; }
+    else if (op < 0) {
+        double unaryNum = numbers.pop();
+        if (-op == '-') { numbers.push(-unaryNum); }
+        else { numbers.push(unaryNum); }
+    } else {
+        if (numbers.size() < 2) { return; }
         double right = numbers.pop();
         double left = numbers.pop();
-        switch (op) {
-        case '+': numbers.push(left + right); break;
-        case '-': numbers.push(left - right); break;
-        case '*': numbers.push(left * right); break;
-        case '/': numbers.push(left / right); break;
-        case '^': numbers.push(std::pow(left, right)); break;
+        if (op == '/' && right == 0) {
+            numbers.push(std::numeric_limits<double>::quiet_NaN());
+        } else {
+            switch (op) {
+                case '+': numbers.push(left + right); break;
+                case '-': numbers.push(left - right); break;
+                case '*': numbers.push(left * right); break;
+                case '/': numbers.push(left / right); break;
+                case '^': numbers.push(std::pow(left, right)); break;
+            }
         }
     }
 }
 
-void Calculator::calculate() {
+
+QString Calculator::calculate() {
     if (!checkParentheses()){
-        qDebug() << "Проверьте количество скобок!";
-    return ;
-}
+        errorMessage("Несовпадение скобок!");
+      return "0";
+     }
 
     bool unary = true;
     numbers.clear();
@@ -248,5 +234,26 @@ while (!operators.empty()) {
     action(operators.pop());
 }
 
-result = QString::number(numbers.pop());
+double result = numbers.pop();
+    if (std::isnan(result)) {
+        return "nan";
+    } else {
+        return QString::number(result);
+    }
+
+}
+
+void Calculator::errorMessage(const QString& message) {
+    QDialog dialog;
+    dialog.setWindowTitle("Ошибка");
+
+    QFont font("Helvetica [Cronyx]", 24);
+
+    QLabel label(message);
+    label.setFont(font);
+
+    QVBoxLayout layout(&dialog);
+    layout.addWidget(&label);
+
+    dialog.exec();
 }
