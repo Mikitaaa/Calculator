@@ -5,12 +5,13 @@
 
 Calculator::Calculator(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::Calculator) {
-
-    setupPalette();
+    setStyleSheet("background-color: rgb(42, 40, 49);");
 
     setupDisplay();
 
     setupButtons();
+
+    //setFixedSize(sizeHint());
 
     formula = "";
 
@@ -33,9 +34,8 @@ QPushButton* Calculator::createButton (const QString& str, const QString &color,
  tempDigitButton->setFont(font);
  QString styleSheet = QString("QPushButton {"
                               "%1"
-                              "border: 0px solid rgb(43, 41, 48);"
-                              "padding: 10px;"
-                              "text-align: bottom;"
+                              "border: none;"
+                              "text-align: center;"
                               "}"
                               "QPushButton:pressed {"
                               "background-color: rgb(161, 160, 161);"
@@ -80,13 +80,6 @@ void Calculator::equalClicked(){
    else formula = result;
 }
 
-
-void Calculator::setupPalette() {
-    QPalette palette;
-    QBrush brush(QColor(48, 45, 50));
-    palette.setBrush(QPalette::Background, brush);
-    this->setPalette(palette);
-}
 
 void Calculator::setupDisplay() {
     display = new Display(this);
@@ -141,6 +134,8 @@ QGridLayout* Calculator::setupLayout()
     tempLayout->addWidget(equalButton, 5, 4, 1, 2);
     tempLayout->addWidget(openBracketButton, 1, 3);
     tempLayout->addWidget(closeBracketButton, 1, 4);
+
+
 
     return tempLayout;
 }
