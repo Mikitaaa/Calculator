@@ -150,14 +150,16 @@ QGridLayout* Calculator::setupLayout()
 }
 
 bool Calculator::checkParentheses() {
-    int openCount = 0, closeCount = 0;
+    QStack<QChar> stack;
 
     for (QChar c : formula) {
-       if (c == '(') { openCount++; }
-       else if (c == ')') {  closeCount++; }
+        if (c == '(') { stack.push(c); }
+        else if (c == ')') {
+            if (stack.isEmpty() || stack.pop() != '(') { return false; }
+        }
     }
 
-    return openCount == closeCount;
+    return stack.isEmpty();
 }
 
 bool Calculator::isOperation(QChar c) {return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';}
@@ -200,7 +202,7 @@ void Calculator::action(char op) {
 QString Calculator::calculate() {
     if (!checkParentheses()){
       errorMessage("Несовпадение скобок!");
-      return "";
+      return "0";
     }
 
     bool unary = true;
