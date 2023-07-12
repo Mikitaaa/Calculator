@@ -17,7 +17,9 @@ Display::Display(QWidget* parent) : QTextEdit(parent) {
 void Display::setText(const QString& text) {
     QTextEdit::setText(text);
     setAlignment(Qt::AlignRight | Qt::AlignBottom);
+
     QTextCursor cursor = textCursor();
     cursor.movePosition(QTextCursor::End);
+
     setTextCursor(cursor);
 }

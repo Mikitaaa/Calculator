@@ -44,7 +44,6 @@ private:
      const QString digitColor = "background-color: rgb(95, 93, 99);";
      const QString operatorColor = "background-color: rgb(215, 51, 154);";
      const QString serviceColor = "background-color: rgb(62, 61, 68);";
-                                  //"border-top: none;";
 
      enum { NumDigitButtons = 10 };
      QPushButton *digitButtons[NumDigitButtons];
@@ -67,7 +66,13 @@ private:
      void setupDisplay();
      void setupButtons();
      QGridLayout* setupLayout();
+
      void errorMessage(const QString& message);
+
+     void keyPressEvent(QKeyEvent* event);
+     bool isInputCharacterAllowed(QChar inputChar);
+     void scrollTextLeft();
+     void scrollTextRight();
 
 private slots:
 

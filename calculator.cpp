@@ -11,7 +11,7 @@ Calculator::Calculator(QWidget *parent)
 
     setupButtons();
 
-    //setFixedSize(sizeHint());
+    setFixedSize(sizeHint());
 
     formula = "";
 
@@ -22,16 +22,15 @@ Calculator::Calculator(QWidget *parent)
     setCentralWidget(centralWidget);
 }
 
-Calculator::~Calculator()
-{
-    delete ui;
-}
+Calculator::~Calculator() { delete ui; }
 
 QPushButton* Calculator::createButton (const QString& str, const QString &color, const char *member) {
  QPushButton* tempDigitButton = new QPushButton(str);
  tempDigitButton->setMinimumSize(60, 50);
+
  QFont font("Helvetica [Cronyx]", 23);
  tempDigitButton->setFont(font);
+
  QString styleSheet = QString("QPushButton {"
                               "%1"
                               "border: none;"
@@ -40,8 +39,10 @@ QPushButton* Calculator::createButton (const QString& str, const QString &color,
                               "QPushButton:pressed {"
                               "background-color: rgb(161, 160, 161);"
                               "}").arg(color);
+
  tempDigitButton->setStyleSheet(styleSheet);
  connect(tempDigitButton, SIGNAL(clicked()), this, member);
+
  return tempDigitButton;
 }
 
@@ -83,7 +84,7 @@ void Calculator::equalClicked(){
 
 void Calculator::setupDisplay() {
     display = new Display(this);
-    display->setMaximumSize (311, 60);
+    display->setMaximumSize (311, 65);
     QFont font("Helvetica [Cronyx]", 44, QFont::Cursive);
     display->setFont(font);
 }
@@ -96,13 +97,16 @@ void Calculator::setupButtons() {
     equalButton = createButton(tr("="), operatorColor, SLOT(equalClicked()));
     clearButton = createButton(tr("AC"), serviceColor, SLOT(clear()));
 
-    pointButton = createButton(tr("."), digitColor, SLOT(DigitOrOperatorClicked()));
     backspaseButton = createButton(tr("⌫"), serviceColor, SLOT(backspaseClicked()));
+
+    pointButton = createButton(tr("."), digitColor, SLOT(DigitOrOperatorClicked()));
+
     powerButton = createButton(tr("^"), operatorColor, SLOT(DigitOrOperatorClicked()));
     divideButton = createButton(tr("÷"), operatorColor, SLOT(DigitOrOperatorClicked()));
     multiplyButton = createButton(tr("×"), operatorColor, SLOT(DigitOrOperatorClicked()));
     minusButton = createButton(tr("-"), operatorColor, SLOT(DigitOrOperatorClicked()));
     plusButton = createButton(tr("+"), operatorColor, SLOT(DigitOrOperatorClicked()));
+
     openBracketButton = createButton(tr("("), serviceColor, SLOT(DigitOrOperatorClicked()));
     closeBracketButton = createButton(tr(")"), serviceColor, SLOT(DigitOrOperatorClicked()));
 }
@@ -115,7 +119,6 @@ QGridLayout* Calculator::setupLayout()
     tempLayout->setSpacing(1);
 
     tempLayout->addWidget(display, 0, 0, 1, 6);
-    tempLayout->addWidget(clearButton, 1, 1, 1, 2);
 
     for (int i = 1; i < NumDigitButtons; ++i) {
       int row = ((9 - i) / 3) + 2;
@@ -123,15 +126,21 @@ QGridLayout* Calculator::setupLayout()
       tempLayout->addWidget(digitButtons[i], row, column);
      }
 
-    tempLayout->addWidget(digitButtons[0], 5, 1, 1, 2);
+    tempLayout->addWidget(equalButton, 5, 4, 1, 2);
+    tempLayout->addWidget(clearButton, 1, 1, 1, 2);
+
     tempLayout->addWidget(backspaseButton, 1, 5);
+
     tempLayout->addWidget(pointButton, 5, 3);
+
+    tempLayout->addWidget(digitButtons[0], 5, 1, 1, 2);
+
     tempLayout->addWidget(multiplyButton, 4, 5);
     tempLayout->addWidget(plusButton, 3, 5);
     tempLayout->addWidget(powerButton, 2, 4, 1, 2);
     tempLayout->addWidget(minusButton, 3, 4);
     tempLayout->addWidget(divideButton, 4, 4);
-    tempLayout->addWidget(equalButton, 5, 4, 1, 2);
+
     tempLayout->addWidget(openBracketButton, 1, 3);
     tempLayout->addWidget(closeBracketButton, 1, 4);
 
@@ -141,23 +150,20 @@ QGridLayout* Calculator::setupLayout()
 }
 
 bool Calculator::checkParentheses() {
-int openCount = 0;
-int closeCount = 0;
-for (QChar c : formula) {
-    if (c == '(') {
-        openCount++;
-    } else if (c == ')') {
-        closeCount++;
-    }
-}
+    int openCount = 0, closeCount = 0;
 
-return openCount == closeCount;
+    for (QChar c : formula) {
+       if (c == '(') { openCount++; }
+       else if (c == ')') {  closeCount++; }
+    }
+
+    return openCount == closeCount;
 }
 
 bool Calculator::isOperation(QChar c) {return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';}
 
 int Calculator::setPriority(char op) {
-    if (op < 0) return 3;
+    if (op < 0) { return 3; }
     else {
        if (op == '+' || op == '-') return 1;
        else if (op == '*' || op == '/') return 2;
@@ -193,9 +199,9 @@ void Calculator::action(char op) {
 
 QString Calculator::calculate() {
     if (!checkParentheses()){
-        errorMessage("Несовпадение скобок!");
+      errorMessage("Несовпадение скобок!");
       return "";
-     }
+    }
 
     bool unary = true;
     numbers.clear();
@@ -213,16 +219,18 @@ for (int i = 0; i < formula.size(); i++) {
         }
         operators.pop();
         unary = false;
+
     } else if (isOperation(currentChar)) {
         char operation = currentChar.toLatin1();
 
-        if (unary) operation = -operation;
+        if (unary) { operation = -operation; }
 
         while (!operators.empty() && setPriority(operators.top()) >= setPriority(operation)) {
             action(operators.pop());
         }
         operators.push(operation);
         unary = true;
+
     } else if (currentChar.isDigit() || currentChar == '.') {
         QString number;
         while (i < formula.size() && (formula[i].isDigit() || formula[i] == '.')) {
@@ -235,17 +243,13 @@ for (int i = 0; i < formula.size(); i++) {
     }
 }
 
-while (!operators.empty()) {
-    action(operators.pop());
-}
+while (!operators.empty()) { action(operators.pop()); }
 
-double result = numbers.pop();
-    if (std::isnan(result)) {
-        return "nan";
-    } else {
-        return QString::number(result);
-    }
 
+    double result = numbers.pop();
+
+    if (std::isnan(result)) { return "nan"; }
+    else { return QString::number(result); }
 }
 
 void Calculator::errorMessage(const QString& message) {
@@ -261,4 +265,44 @@ void Calculator::errorMessage(const QString& message) {
     layout.addWidget(&label);
 
     dialog.exec();
+}
+
+void Calculator::keyPressEvent(QKeyEvent* event) {
+    switch (event->key()) {
+        case Qt::Key_Left:
+            scrollTextLeft();
+            break;
+        case Qt::Key_Right:
+            scrollTextRight();
+            break;
+        default:
+        QString inputText = event->text();
+        if (!inputText.isEmpty()) {
+            QChar inputChar = inputText.at(0);
+            if (isInputCharacterAllowed(inputChar)) {
+                formula += inputChar;
+                display->setText(formula);
+            }
+        }
+            break;
+    }
+    QMainWindow::keyPressEvent(event);
+}
+
+bool Calculator::isInputCharacterAllowed(QChar inputChar) {
+    QString allowedCharacters = "0123456789+-*/().^";
+
+    return allowedCharacters.contains(inputChar);
+}
+
+void Calculator::scrollTextLeft() {
+    QTextCursor cursor = display->textCursor();
+    cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
+    display->setTextCursor(cursor);
+}
+
+void Calculator::scrollTextRight() {
+    QTextCursor cursor = display->textCursor();
+    cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor);
+    display->setTextCursor(cursor);
 }
