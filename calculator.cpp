@@ -277,6 +277,12 @@ void Calculator::keyPressEvent(QKeyEvent* event) {
         case Qt::Key_Right:
             scrollTextRight();
             break;
+        case Qt::Key_Backspace:
+            backspaseClicked();
+            break;
+        case Qt::Key_Return:
+            equalClicked();
+            break;
         default:
         QString inputText = event->text();
         if (!inputText.isEmpty()) {
