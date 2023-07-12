@@ -55,14 +55,13 @@ void Calculator::DigitOrOperatorClicked() {
     display->setText(formula);
 }
 
-void Calculator::clear() {
+void Calculator::clearClicked() {
     display->setText("0");
 
     numbers.clear();
     operators.clear();
 
     formula = "";
-
 }
 
 void Calculator::backspaseClicked() {
@@ -77,6 +76,7 @@ void Calculator::equalClicked(){
 
     numbers.clear();
     operators.clear();
+
     if(result == "nan" || result == "0")formula = "";
    else formula = result;
 }
@@ -85,6 +85,7 @@ void Calculator::equalClicked(){
 void Calculator::setupDisplay() {
     display = new Display(this);
     display->setMaximumSize (311, 65);
+
     QFont font("Helvetica [Cronyx]", 44, QFont::Cursive);
     display->setFont(font);
 }
@@ -95,7 +96,7 @@ void Calculator::setupButtons() {
      }
 
     equalButton = createButton(tr("="), operatorColor, SLOT(equalClicked()));
-    clearButton = createButton(tr("AC"), serviceColor, SLOT(clear()));
+    clearButton = createButton(tr("AC"), serviceColor, SLOT(clearClicked()));
 
     backspaseButton = createButton(tr("⌫"), serviceColor, SLOT(backspaseClicked()));
 
@@ -152,7 +153,8 @@ QGridLayout* Calculator::setupLayout()
 bool Calculator::checkParentheses() {
     QStack<QChar> stack;
 
-    for (QChar c : formula) {
+    for (int i = 0; i < formula.size(); ++i) {
+        const QChar& c = formula.at(i);
         if (c == '(') { stack.push(c); }
         else if (c == ')') {
             if (stack.isEmpty() || stack.pop() != '(') { return false; }

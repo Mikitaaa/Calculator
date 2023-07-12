@@ -77,7 +77,7 @@ private:
 private slots:
 
      void DigitOrOperatorClicked();
-     void clear();
+     void clearClicked();
      void backspaseClicked();
 
      void equalClicked();
