@@ -1,7 +1,6 @@
 #include "display.h"
 
 Display::Display(QWidget* parent) : QTextEdit(parent) {
-    setReadOnly(true);
     setAlignment(Qt::AlignRight | Qt::AlignBottom);
     setReadOnly(true);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

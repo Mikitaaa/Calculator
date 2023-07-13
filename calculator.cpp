@@ -151,17 +151,20 @@ QGridLayout* Calculator::setupLayout()
 }
 
 bool Calculator::checkParentheses() {
-    QStack<QChar> stack;
+    int count = 0;
 
     for (int i = 0; i < formula.size(); ++i) {
         const QChar& c = formula.at(i);
-        if (c == '(') { stack.push(c); }
-        else if (c == ')') {
-            if (stack.isEmpty() || stack.pop() != '(') { return false; }
+        if (c == '(') {
+            count++;
+        } else if (c == ')') {
+            if (count == 0) { return false; }
+
+            count--;
         }
     }
 
-    return stack.isEmpty();
+    return count == 0;
 }
 
 bool Calculator::isOperation(QChar c) {return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';}
@@ -203,7 +206,7 @@ void Calculator::action(char op) {
 
 QString Calculator::calculate() {
     if (!checkParentheses()){
-      errorMessage("Несовпадение скобок!");
+      errorMessage("Parentheses mismatch!");
       return "0";
     }
 
@@ -258,7 +261,7 @@ while (!operators.empty()) { action(operators.pop()); }
 
 void Calculator::errorMessage(const QString& message) {
     QDialog dialog;
-    dialog.setWindowTitle("Ошибка");
+    dialog.setWindowTitle("Error");
 
     QFont font("Helvetica [Cronyx]", 24);
 
