@@ -1,5 +1,7 @@
+// Realise custom class for display with overloaded setText function
 #include "display.h"
 
+// Custom options of display
 Display::Display(QWidget* parent) : QTextEdit(parent) {
     setAlignment(Qt::AlignRight | Qt::AlignBottom);
     setReadOnly(true);
@@ -13,6 +15,7 @@ Display::Display(QWidget* parent) : QTextEdit(parent) {
     setText("0");
 }
 
+// Overloaded function
 void Display::setText(const QString& text) {
     QTextEdit::setText(text);
     setAlignment(Qt::AlignRight | Qt::AlignBottom);

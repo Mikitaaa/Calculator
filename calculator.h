@@ -62,7 +62,6 @@ private:
      QPushButton *openBracketButton;
      QPushButton *closeBracketButton;
 
-     void setupPalette();
      void setupDisplay();
      void setupButtons();
      QGridLayout* setupLayout();
