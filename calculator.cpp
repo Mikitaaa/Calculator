@@ -78,21 +78,19 @@ void Calculator::backspaseClicked() {
 }
 
 void Calculator::equalClicked(){
-    // Calculate the result of the formula
     QString result = calculate();
-    // Update the display with the calculated result
+
     display->setText(result);
 
-    // Clear the stack of numbers and operators
     numbers.clear();
     operators.clear();
 
-    // Clear the formula if the result is "nan" or "0"
+    // Clear the result if it is "nan" or "0"
     // This is necessary to preven errors
-    // because we are using string type formula
-    if(result == "nan" || result == "0")formula = "";
+    // like: 02 + 2
+    if(result == "nan" || result == "0") { result = ""; }
     // We can use the result for the following solution
-   else formula = result;
+    formula = result;
 }
 
 // Create a new display widget with specified options
