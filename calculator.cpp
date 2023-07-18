@@ -340,13 +340,11 @@ void Calculator::keyPressEvent(QKeyEvent* event) {
             equalClicked();
             break;
         default: // Check for allowed character and push it to formula and display
+            QString inputText = event->text();
 
-        QString inputText = event->text();
-
-        if(InputCharacterISValid(inputText)){
-            addCharacterToSolution(inputText.at(0));
-        }
-
+            if(InputCharacterISValid(inputText)){
+                addCharacterToSolution(inputText.at(0));
+            }
             break;
     }
     QMainWindow::keyPressEvent(event);
@@ -355,14 +353,11 @@ void Calculator::keyPressEvent(QKeyEvent* event) {
 bool Calculator::InputCharacterISValid(QString inputText) {
     if (!inputText.isEmpty()) {
         QChar inputChar = inputText.at(0);
-        if (isInputCharacterAllowed(inputChar)) { return 1; }
+        QString allowedCharacters = "0123456789+-*/().^";
+
+        return allowedCharacters.contains(inputChar);
     }
     return 0;
-}
-
-bool Calculator::isInputCharacterAllowed(QChar inputChar) {
-    QString allowedCharacters = "0123456789+-*/().^";
-    return allowedCharacters.contains(inputChar);
 }
 
 void Calculator::addCharacterToSolution(QChar inputSimbol){
