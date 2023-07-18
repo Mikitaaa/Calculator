@@ -69,7 +69,9 @@ private:
      void errorMessage(const QString& message);
 
      void keyPressEvent(QKeyEvent* event);
+     bool InputCharacterISValid(QString inputText);
      bool isInputCharacterAllowed(QChar inputChar);
+     void addCharacterToSolution(QChar inputSimbol);
      void scrollTextLeft();
      void scrollTextRight();
 

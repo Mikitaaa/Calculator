@@ -340,28 +340,35 @@ void Calculator::keyPressEvent(QKeyEvent* event) {
         case Qt::Key_Return:
             equalClicked();
             break;
-        default: // Check for allowed character and push it to formula
+        default: // Check for allowed character and push it to formula and display
 
         QString inputText = event->text();
 
-        if (!inputText.isEmpty()) {
-            QChar inputChar = inputText.at(0);
-
-            if (isInputCharacterAllowed(inputChar)) {
-                formula += inputChar;
-                display->setText(formula);
-            }
+        if(InputCharacterISValid(inputText)){
+            addCharacterToSolution(inputText.at(0));
         }
+
             break;
     }
     QMainWindow::keyPressEvent(event);
 }
 
-// This function checks if the input character is allowed based on a list of allowed characters.
+bool Calculator::InputCharacterISValid(QString inputText) {
+    if (!inputText.isEmpty()) {
+        QChar inputChar = inputText.at(0);
+        if (isInputCharacterAllowed(inputChar)) { return 1; }
+    }
+    return 0;
+}
+
 bool Calculator::isInputCharacterAllowed(QChar inputChar) {
     QString allowedCharacters = "0123456789+-*/().^";
-
     return allowedCharacters.contains(inputChar);
+}
+
+void Calculator::addCharacterToSolution(QChar inputSimbol){
+    formula += inputSimbol;
+    display->setText(formula);
 }
 
 // This function scrolls the text display to the left.
