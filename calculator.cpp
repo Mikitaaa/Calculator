@@ -240,6 +240,7 @@ QString Calculator::calculate() {
 
     // Display error message if parentheses are not balanced and return 0
     if (!checkParentheses()){
+      display->setText("˙◠˙");
       errorMessage("Parentheses mismatch!");
       return "0";
     }
